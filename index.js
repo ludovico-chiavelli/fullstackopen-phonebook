@@ -24,7 +24,13 @@ let persons = [
   },
 ];
 
-app.get("/api/persons", (req, res) => {
+app.get('/info', (req, res) => {
+    res.write(`Phonnebook ahs infor for ${persons.length} people. \n`)
+    res.write(`${new Date()}`)
+    res.end()
+});
+
+app.get('/api/persons', (req, res) => {
   res.json(persons);
 });
 
