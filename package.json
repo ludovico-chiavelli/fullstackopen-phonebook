@@ -1,0 +1,25 @@
+{
+  "name": "fullstackopen-phonebook",
+  "version": "1.0.0",
+  "description": "Part 3 from FSO.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ludovico-chiavelli/fullstackopen-phonebook.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ludovico-chiavelli/fullstackopen-phonebook/issues"
+  },
+  "homepage": "https://github.com/ludovico-chiavelli/fullstackopen-phonebook#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.12"
+  }
+}
