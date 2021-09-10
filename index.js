@@ -50,16 +50,35 @@ app.get('/api/persons/:id', (req, res) => {
 
 app.post('/api/persons', (req,res) => {
   const randomID = Math.floor(Math.random() * 50)
-  
-  const newPerson = {
-    name: req.body.person,
-    number: req.body.number,
-    id: randomID
-  }
 
-  persons.push(newPerson)
-  
-  res.send(newPerson)
+  let newPerson = {};
+
+  const personsNames = persons.map(person => person.name)
+
+
+  // console.log(req.body.name)
+  // console.log(personsNames)
+  // console.log(personsNames.includes(req.body.name))
+
+  if (!req.body.hasOwnProperty('name')) {
+    res.status(500)
+    res.send({error: 'The object has no name property'})
+  } else if (!req.body.hasOwnProperty('number')) {
+    res.status(500)
+    res.send({error: 'The object has no number property'})
+  } else if (personsNames.includes(req.body.name)) {
+    res.status(500)
+    res.send({error: 'The person already exists'})
+  } else {
+    newPerson = {
+      name: req.body.name,
+      number: req.body.number,
+      id: randomID
+    }
+    persons.push(newPerson)
+    
+    res.send(newPerson)
+  }
 });
 
 app.delete('/api/persons/:id', (req, res) => {
