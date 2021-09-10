@@ -4,7 +4,9 @@ const app = express();
 const morgan = require("morgan")
 
 app.use(express.json())
-app.use(morgan('tiny'))
+
+morgan.token('body', (req,res) => JSON.stringify(req.body))
+app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body'))
 
 let persons = [
   {
@@ -30,7 +32,7 @@ let persons = [
 ];
 
 app.get('/info', (req, res) => {
-  res.write(`Phonnebook ahs infor for ${persons.length} people. \n`)
+  res.write(`Phonnebook has info for ${persons.length} people. \n`)
   res.write(`${new Date()}`)
   res.end()
 });
@@ -73,9 +75,9 @@ app.post('/api/persons', (req,res) => {
     res.send({error: 'The person already exists'})
   } else {
     newPerson = {
+      id: randomID,
       name: req.body.name,
-      number: req.body.number,
-      id: randomID
+      number: req.body.number
     }
     persons.push(newPerson)
     
