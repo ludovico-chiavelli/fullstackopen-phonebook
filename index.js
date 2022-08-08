@@ -16,10 +16,11 @@ app.use(
 );
 
 app.get("/info", (req, res) => {
-
-  res.write(`Phonnebook has info for ${persons.length} people. \n`);
-  res.write(`${new Date()}`);
-  res.end();
+  Contact.find({}).then((contacts) => {
+    res.write(`Phonnebook has info for ${contacts.length} people. \n`);
+    res.write(`${new Date()}`);
+    res.end();
+  })
 });
 
 app.get("/api/persons", (req, res) => {
