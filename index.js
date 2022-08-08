@@ -58,10 +58,9 @@ app.post("/api/persons", (req, res) => {
 });
 
 app.delete("/api/persons/:id", (req, res) => {
-  const id = Number(req.params.id);
-  persons = persons.filter((person) => person.id !== id);
-
+  Contact.findByIdAndRemove(req.params.id).then((contact) => {
   res.status(204).end();
+  })
 });
 
 const PORT = process.env.PORT;
