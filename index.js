@@ -4,6 +4,7 @@ const app = express();
 const morgan = require("morgan");
 const cors = require("cors");
 const Contact = require("./models/contact");
+const { default: mongoose } = require('mongoose');
 
 app.use(express.json());
 app.use(express.static("build"));
@@ -14,28 +15,13 @@ app.use(
   morgan(":method :url :status :res[content-length] - :response-time ms :body")
 );
 
-let persons = [
-  {
-    id: 1,
-    name: "Arto Hellas",
-    number: "040-123456",
-  },
-  {
-    id: 2,
-    name: "Ada Lovelace",
-    number: "39-44-5323523",
-  },
-  {
-    id: 3,
-    name: "Dan Abramov",
-    number: "12-43-234345",
-  },
-  {
-    id: 4,
-    name: "Mary Poppendieck",
-    number: "39-23-6423122",
-  },
-];
+mongoose.connect(process.env.MONGODB_URI)
+.then(result => {
+    console.log('connected to MongoDB')
+  })
+  .catch((error) => {
+    console.log('error connecting to MongoDB:', error.message)
+  })
 
 app.get("/info", (req, res) => {
   res.write(`Phonnebook has info for ${persons.length} people. \n`);
@@ -59,35 +45,20 @@ app.get("/api/persons/:id", (req, res) => {
 });
 
 app.post("/api/persons", (req, res) => {
-  const randomID = Math.floor(Math.random() * 50);
+  const body = req.body;
 
-  let newPerson = {};
-
-  const personsNames = persons.map((person) => person.name);
-
-  // console.log(req.body.name)
-  // console.log(personsNames)
-  // console.log(personsNames.includes(req.body.name))
-
-  if (!req.body.hasOwnProperty("name")) {
-    res.status(500);
-    res.send({ error: "The object has no name property" });
-  } else if (!req.body.hasOwnProperty("number")) {
-    res.status(500);
-    res.send({ error: "The object has no number property" });
-  } else if (personsNames.includes(req.body.name)) {
-    res.status(500);
-    res.send({ error: "The person already exists" });
-  } else {
-    newPerson = {
-      id: randomID,
-      name: req.body.name,
-      number: req.body.number,
-    };
-    persons.push(newPerson);
-
-    res.send(newPerson);
+  if (body.name === undefined && body.phoneNumber === undefined) {
+    return res.status(400).json({ error: "content missing" });
   }
+
+  const person = new Contact({
+    name: body.name,
+    phoneNumber: body.phoneNumber,
+  })
+
+  person.save().then(savedPerson => {
+    res.json(savedPerson);
+  })
 });
 
 app.delete("/api/persons/:id", (req, res) => {
