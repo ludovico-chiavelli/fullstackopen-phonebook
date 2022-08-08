@@ -15,15 +15,8 @@ app.use(
   morgan(":method :url :status :res[content-length] - :response-time ms :body")
 );
 
-mongoose.connect(process.env.MONGODB_URI)
-.then(result => {
-    console.log('connected to MongoDB')
-  })
-  .catch((error) => {
-    console.log('error connecting to MongoDB:', error.message)
-  })
-
 app.get("/info", (req, res) => {
+
   res.write(`Phonnebook has info for ${persons.length} people. \n`);
   res.write(`${new Date()}`);
   res.end();
