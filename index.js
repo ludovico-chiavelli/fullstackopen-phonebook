@@ -24,7 +24,10 @@ app.get("/info", (req, res) => {
 });
 
 app.get("/api/persons", (req, res) => {
-  res.json(persons);
+  Contact.find({}).then((contacts) => {
+    res.json(contacts);
+    res.end();
+  })
 });
 
 app.get("/api/persons/:id", (req, res) => {
