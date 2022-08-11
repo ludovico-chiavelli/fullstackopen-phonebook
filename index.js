@@ -47,14 +47,13 @@ app.get("/api/persons/:id", (req, res, next) => {
 app.post("/api/persons", (req, res, next) => {
   const body = req.body;
 
-  const exists = Contact.find({})
+  let exists = false
+  Contact.find({})
     .then((contacts) => {
-      contacts.forEach((contact) => {
-        if (contact.name === body.name) {
-          return res.status(400).json({ error: "name must be unique" });
-        }
-      })
-    })
+      if (Object.values(contacts).includes(body.name)) {
+        exists = true
+      }
+  })
   
   if (body.name === undefined && body.phoneNumber === undefined) {
     return res.status(400).json({ error: "content missing" });
