@@ -46,10 +46,22 @@ app.get("/api/persons/:id", (req, res, next) => {
 
 app.post("/api/persons", (req, res, next) => {
   const body = req.body;
+
+  const exists = Contact.find({})
+    .then((contacts) => {
+      contacts.forEach((contact) => {
+        if (contact.name === body.name) {
+          return res.status(400).json({ error: "name must be unique" });
+        }
+      })
+    })
   
   if (body.name === undefined && body.phoneNumber === undefined) {
     return res.status(400).json({ error: "content missing" });
+  } else if (exists) {
+    return res.status(400).json({ error: "name must be unique" });
   }
+  
   
   const person = new Contact({
     name: body.name,
